@@ -2,7 +2,7 @@ import React from "react";
 import { TouchableOpacity, View } from "react-native";
 import Svg, { Path } from "react-native-svg";
 
-export default function CancelIcon({ width, height, color, onPress }) {
+export const CancelIcon = ({ width, height, color, onPress }) => {
   return (
     <TouchableOpacity onPress={onPress}>
       <View>
@@ -13,4 +13,4 @@ export default function CancelIcon({ width, height, color, onPress }) {
       </View>
     </TouchableOpacity>
   );
-}
+};

@@ -80,7 +80,7 @@ const MainActivtiy = ({ navigation }) => {
         >
           <ToggleComplete isFiltered={isFiltered} onPress={toggle_filter} />
           <AddBtn
-            onPress={() => console.log("hello")}
+            onPress={() => navigation.navigate("AddActivity")}
             height={28}
             width={28}
             color="black"

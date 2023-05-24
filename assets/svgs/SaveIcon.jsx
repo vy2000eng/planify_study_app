@@ -2,7 +2,7 @@ import React from "react";
 import { TouchableOpacity, View } from "react-native";
 import Svg, { Path, Rect, Line } from "react-native-svg";
 
-const SaveIcon = ({ width, height, onPress, color }) => {
+export const SaveIcon = ({ width, height, onPress, color }) => {
   return (
     <TouchableOpacity onPress={onPress}>
       <View>
@@ -14,5 +14,3 @@ const SaveIcon = ({ width, height, onPress, color }) => {
     </TouchableOpacity>
   );
 };
-
-export default SaveIcon;
