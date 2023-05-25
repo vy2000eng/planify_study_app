@@ -40,49 +40,26 @@ export const AddActivity = ({ navigation }) => {
   };
 
   const handleSave = useCallback(async () => {
-    console.log(title + "\n");
-    console.log(description + "\n");
-    console.log(date + "\n");
-    console.log(dropdownValue);
-    const correct_date = formatDate(date);
-    console.log(correct_date);
-
-    const fetchToken = async () => {
-      const fetchTokenAndData = async () => {
-        try {
-          const token = await retrieveToken();
-          const config = {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          };
-          const data = {
-            title: title,
-            description: description,
-            due_date: date,
-            priority: dropdownValue,
-          };
-
-          const fetchData = async () => {
-            try {
-              const url = REACT_APP_CREATE_TASK;
-              //console.log(url);
-              const response = await axios.post(url, data, config);
-            } catch (error) {
-              if (error.response.status === 401) {
-                //token_setter(false);
-                console.log(error.response);
-              }
-            }
-          };
-          await fetchData();
-        } catch (e) {
-          console.log(e);
-        }
+    try {
+      const token = await retrieveToken();
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       };
-      await fetchTokenAndData();
-    };
-    await fetchToken();
+      const data = {
+        title: title,
+        description: description,
+        due_date: date,
+        priority: dropdownValue,
+      };
+      const url = REACT_APP_CREATE_TASK;
+      const response = await axios.post(url, data, config);
+    } catch (e) {
+      console.log(error.response);
+
+      console.log(e);
+    }
   }, [title, description, date, dropdownValue]);
 
   useEffect(() => {
@@ -150,16 +127,6 @@ export const AddActivity = ({ navigation }) => {
             setValue={setDropdownValue}
             style={styles.drop_down_picker}
           />
-
-          {/* <DropDownPicker
-            open={priorityOpen}
-            value={priorityValue}
-            items={priorityItems}
-            setOpen={setPriorityOpen}
-            setValue={setPriorityValue}
-            placeholder="Select Priority"
-            style={[styles.text_input, { width: 250 }]}
-          /> */}
         </View>
       </View>
     </View>
