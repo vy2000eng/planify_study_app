@@ -6,6 +6,7 @@ import { AuthContext } from "../context/AuthContext";
 import React, { useContext, useEffect, useReducer, useState } from "react";
 import { View, StyleSheet, ScrollView, Text } from "react-native";
 import axios from "axios";
+import COLORS from "../constants/theme";
 const initialState = {
   isFiltered: false,
   tasks: [],
@@ -117,7 +118,7 @@ const MainActivtiy = ({ navigation }) => {
 };
 const styles = StyleSheet.create({
   sv: {
-    backgroundColor: "#fff",
+    backgroundColor: COLORS.white,
     alignItems: "center",
   },
   tasks_container: {
