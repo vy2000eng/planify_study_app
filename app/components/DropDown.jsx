@@ -4,9 +4,9 @@ import { Dropdown } from "react-native-element-dropdown";
 import AntDesign from "@expo/vector-icons/AntDesign";
 
 const data = [
-  { label: "Low Priority", value: "0" },
-  { label: "Medium Priorty", value: "1" },
-  { label: "High Priortiy", value: "2" },
+  { label: "Low Priority", value: "1" },
+  { label: "Medium Priorty", value: "2" },
+  { label: "High Priortiy", value: "3" },
 ];
 
 const DropdownComponent = ({ value, setValue }) => {
