@@ -54,7 +54,6 @@ const MainActivtiy = ({ navigation }) => {
             dispatch({ type: "SET_TASKS", payload: response.data });
           } catch (error) {
             if (error.response.status === 401) {
-              //token_setter(false);
             }
           }
         };
@@ -96,6 +95,17 @@ const MainActivtiy = ({ navigation }) => {
     });
   }, [navigation, isFiltered]);
 
+  const formatDate = (dateStr) => {
+    const date = new Date(dateStr);
+
+    // Since getMonth() returns a value between 0-11 we need to add 1 to get the correct month number
+    const year = date.getFullYear();
+    const month = ("0" + (date.getMonth() + 1)).slice(-2); // add leading zero
+    const day = ("0" + date.getDate()).slice(-2); // add leading zero
+
+    return `${year}-${month}-${day}`;
+  };
+
   return (
     <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.sv}>
@@ -106,9 +116,8 @@ const MainActivtiy = ({ navigation }) => {
             name={task.name}
             priority={task.priority}
             taskDescription={task.task_description}
-            createdAt={task.created_at}
             isCompleted={task.completed}
-            due_date={task.due_date}
+            due_date={formatDate(task.due_date)}
             style={styles.tasks_container}
           />
         ))}
