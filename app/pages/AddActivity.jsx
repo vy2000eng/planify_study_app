@@ -49,6 +49,7 @@ export const AddActivity = ({ navigation }) => {
         type: "ADD_TASK",
         payload: count + 1,
       });
+      navigation.navigate("MainActivity");
     } catch (e) {
       console.log(e);
     }

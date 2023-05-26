@@ -54,6 +54,7 @@ const MainActivtiy = ({ navigation }) => {
             dispatch({ type: "SET_TASKS", payload: response.data });
           } catch (error) {
             if (error.response.status === 401) {
+              //token_setter(false);
             }
           }
         };
@@ -116,6 +117,7 @@ const MainActivtiy = ({ navigation }) => {
             name={task.name}
             priority={task.priority}
             taskDescription={task.task_description}
+            createdAt={formatDate(task.created_at)}
             isCompleted={task.completed}
             due_date={formatDate(task.due_date)}
             style={styles.tasks_container}

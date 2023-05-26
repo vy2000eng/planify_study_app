@@ -51,7 +51,7 @@ export default function Task(props) {
           <Text>Title: {props.taskName}</Text>
           <Text>Description: {props.taskDescription}</Text>
           <Text>Created At: {props.createdAt}</Text>
-          <Text>due_date: {props.due_date} </Text>
+          <Text>Due Date: {props.due_date} </Text>
         </View>
         {props.isCompleted ? (
           <AssignmentCompleted {...params} />
