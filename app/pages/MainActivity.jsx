@@ -26,7 +26,7 @@ const reducer = (state, action) => {
 const MainActivtiy = ({ navigation }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const { valuesForChildren } = useContext(AuthContext);
-  const { retrieveToken } = valuesForChildren;
+  const { retrieveToken, stateTask } = valuesForChildren;
   const { isFiltered, tasks } = state;
   const toggle_filter = () => {
     dispatch({
@@ -65,7 +65,7 @@ const MainActivtiy = ({ navigation }) => {
     };
 
     fetchTokenAndData();
-  }, [isFiltered]);
+  }, [isFiltered, stateTask]);
 
   useEffect(() => {
     console.log("The State Is " + isFiltered);

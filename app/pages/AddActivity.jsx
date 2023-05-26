@@ -21,8 +21,15 @@ export const AddActivity = ({ navigation }) => {
   const [description, setDescription] = useState("");
   const [dropdownValue, setDropdownValue] = useState(null);
   const { valuesForChildren } = useContext(AuthContext);
-  const { retrieveToken } = valuesForChildren;
-  console.log(REACT_APP_CREATE_TASK);
+  const { retrieveToken, stateTask, dispatchTask } = valuesForChildren;
+  const { count } = stateTask;
+  console.log(stateTask);
+  console.log(count);
+
+  //console.log(taskUpdate);
+  //   console.log(stateTask);
+  //   console.log(REACT_APP_CREATE_TASK);
+  //   console.log(taskUpdate);
 
   const onChange = (event, selectedDate) => {
     const currentDate = selectedDate || date;
@@ -55,9 +62,11 @@ export const AddActivity = ({ navigation }) => {
       };
       const url = REACT_APP_CREATE_TASK;
       const response = await axios.post(url, data, config);
+      dispatchTask({
+        type: "ADD_TASK",
+        payload: count + 1,
+      });
     } catch (e) {
-      console.log(error.response);
-
       console.log(e);
     }
   }, [title, description, date, dropdownValue]);

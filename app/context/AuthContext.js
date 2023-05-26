@@ -1,10 +1,22 @@
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useReducer, useState } from "react";
 import * as SecureStore from "expo-secure-store";
 
 export const AuthContext = createContext();
 
 export default function AuthContextProvider({ children }) {
   const [authTokenBoolean, setAuthTokenBoolean] = useState(false);
+
+  const initial_state = {
+    count: 0,
+  };
+  const tasksReducer = (state, action) => {
+    switch (action.type) {
+      case "ADD_TASK":
+        return { ...state, count: action.payload };
+    }
+  };
+
+  const [stateTask, dispatchTask] = useReducer(tasksReducer, initial_state);
 
   //secure store functions
   const storeToken = async (token) => {
@@ -41,6 +53,8 @@ export default function AuthContextProvider({ children }) {
     storeToken,
     retrieveToken,
     removeToken,
+    stateTask,
+    dispatchTask,
   };
   return (
     <AuthContext.Provider value={{ valuesForChildren }}>
