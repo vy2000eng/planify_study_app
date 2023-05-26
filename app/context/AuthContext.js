@@ -8,11 +8,18 @@ export default function AuthContextProvider({ children }) {
 
   const initial_state = {
     count: 0,
+    set_is_true: true,
+    set_is_false: false,
   };
   const tasksReducer = (state, action) => {
     switch (action.type) {
       case "ADD_TASK":
         return { ...state, count: action.payload };
+      case "SET_TRUE_TO_FALSE":
+        return { ...state, set_is_true: action.payload };
+      case "SET_FALSE_TO_TRUE":
+        return { ...state, set_is_true: action.payload };
+
       default:
         return state;
     }

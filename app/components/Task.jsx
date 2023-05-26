@@ -1,9 +1,15 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { Card } from "react-native-elements";
 import COLORS from "../constants/theme";
 import { AssignmentIcon, AssignmentCompleted } from "../../assets/svgs";
+import axios from "axios";
+import { AuthContext } from "../context/AuthContext";
+import { REACT_APP_UPDATE_IS_TRUE } from "@env";
 export default function Task(props) {
+  const { valuesForChildren } = useContext(AuthContext);
+  const { retrieveToken, stateTask, dispatchTask } = valuesForChildren;
+  const { set_is_true, set_is_false } = stateTask;
   const priority_color = [
     COLORS.lowPriority,
     COLORS.mediumPriority,
@@ -11,8 +17,8 @@ export default function Task(props) {
   ];
   const params = {
     height: 30,
-    width: 30,
     color: "black",
+    width: 30,
   };
 
   const get_priority_color = () => {
@@ -44,6 +50,35 @@ export default function Task(props) {
       gap: 6,
     },
   });
+
+  const toggle_true_false = async () => {
+    try {
+      const token = await retrieveToken();
+      //const url =
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      };
+      const data = {
+        isTrue: !props.isCompleted,
+      };
+      const url = REACT_APP_UPDATE_IS_TRUE + `${props.id}`;
+      await axios.put(url, data, config);
+      props.isCompleted
+        ? dispatchTask({
+            type: "SET_TRUE_TO_FALSE",
+            payload: !set_is_true,
+          })
+        : dispatchTask({
+            type: "SET_FALSE_TO_TRUE",
+            payload: !set_is_false,
+          });
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
   return (
     <Card containerStyle={styles.container}>
       <View style={styles.contentContainer}>
@@ -54,9 +89,9 @@ export default function Task(props) {
           <Text>Due Date: {props.due_date} </Text>
         </View>
         {props.isCompleted ? (
-          <AssignmentCompleted {...params} />
+          <AssignmentCompleted {...params} onPress={toggle_true_false} />
         ) : (
-          <AssignmentIcon {...params} />
+          <AssignmentIcon {...params} onPress={toggle_true_false} />
         )}
       </View>
     </Card>

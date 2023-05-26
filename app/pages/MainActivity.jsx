@@ -113,6 +113,7 @@ const MainActivtiy = ({ navigation }) => {
         {tasks.map((task) => (
           <Task
             key={task.id} // Make sure to provide a unique key
+            id={task.id}
             taskName={task.task_name}
             name={task.name}
             priority={task.priority}
