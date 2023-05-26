@@ -23,27 +23,10 @@ export const AddActivity = ({ navigation }) => {
   const { valuesForChildren } = useContext(AuthContext);
   const { retrieveToken, stateTask, dispatchTask } = valuesForChildren;
   const { count } = stateTask;
-  console.log(stateTask);
-  console.log(count);
-
-  //console.log(taskUpdate);
-  //   console.log(stateTask);
-  //   console.log(REACT_APP_CREATE_TASK);
-  //   console.log(taskUpdate);
 
   const onChange = (event, selectedDate) => {
     const currentDate = selectedDate || date;
     setDate(currentDate);
-  };
-  const formatDate = (dateStr) => {
-    const date = new Date(dateStr);
-
-    // Since getMonth() returns a value between 0-11 we need to add 1 to get the correct month number
-    const year = date.getFullYear();
-    const month = ("0" + (date.getMonth() + 1)).slice(-2); // add leading zero
-    const day = ("0" + date.getDate()).slice(-2); // add leading zero
-
-    return `${year}-${month}-${day}`;
   };
 
   const handleSave = useCallback(async () => {

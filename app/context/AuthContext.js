@@ -13,6 +13,8 @@ export default function AuthContextProvider({ children }) {
     switch (action.type) {
       case "ADD_TASK":
         return { ...state, count: action.payload };
+      default:
+        return state;
     }
   };
 
