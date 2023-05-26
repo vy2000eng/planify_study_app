@@ -7,25 +7,46 @@ import {
   Platform,
 } from "react-native";
 import React, { useEffect, useState, useCallback, useContext } from "react";
-import { SaveIcon, CancelIcon } from "../../assets/svgs";
+import { SaveIcon, CancelIcon, DeleteIcon } from "../../assets/svgs";
 import COLORS from "../constants/theme";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import DropdownComponent from "../components/DropDown";
 import axios from "axios";
-import { REACT_APP_CREATE_TASK } from "@env";
+import {
+  REACT_APP_CREATE_TASK,
+  REACT_APP_DELETE,
+  REACT_APP_UPDATE,
+} from "@env";
 import { AuthContext } from "../context/AuthContext";
 
-export const AddActivity = ({ navigation }) => {
+export const AddActivity = ({ navigation, route }) => {
+  const { fromOnLongClick, mTitle, mDescription, mDate, mPriority, mId } =
+    route.params;
+
   const [date, setDate] = useState(new Date());
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [dropdownValue, setDropdownValue] = useState(null);
   const { valuesForChildren } = useContext(AuthContext);
   const { retrieveToken, stateTask, dispatchTask } = valuesForChildren;
-  const { count } = stateTask;
+  const { count, is_updated } = stateTask;
+
+  useEffect(() => {
+    const setExistingValues = () => {
+      setDate(new Date(mDate));
+      setTitle(mTitle);
+      setDescription(mDescription);
+      setDropdownValue(mPriority);
+    };
+
+    if (fromOnLongClick) {
+      setExistingValues();
+    }
+  }, []);
 
   const onChange = (event, selectedDate) => {
     const currentDate = selectedDate || date;
+    console.log(currentDate);
     setDate(currentDate);
   };
 
@@ -55,6 +76,58 @@ export const AddActivity = ({ navigation }) => {
     }
   }, [title, description, date, dropdownValue]);
 
+  const handleUpdate = async () => {
+    console.log("its the update button thats being called");
+    try {
+      const token = await retrieveToken();
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      };
+      const data = {
+        title: title,
+        description: description,
+        due_date: date,
+        priority: dropdownValue,
+      };
+      const url = REACT_APP_UPDATE + `${mId}`;
+      const response = await axios.put(url, data, config);
+      dispatchTask({
+        type: "UPDATE_TASK",
+        payload: !is_updated,
+      });
+
+      navigation.navigate("MainActivity");
+    } catch (e) {
+      console.log(e);
+    }
+    navigation.navigate("MainActivity");
+  };
+
+  const handleDelete = async () => {
+    console.log("its the delete button thats being called");
+    try {
+      const token = await retrieveToken();
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      };
+      const url = REACT_APP_DELETE + `${mId}`;
+      await axios.delete(url, config);
+      dispatchTask({
+        type: "DELETE_TASK",
+        payload: count - 1,
+      });
+      navigation.navigate("MainActivity");
+    } catch (e) {
+      console.log(e.response);
+    }
+
+    navigation.navigate("MainActivity");
+  };
+
   useEffect(() => {
     navigation.setOptions({
       headerRight: () => (
@@ -66,13 +139,37 @@ export const AddActivity = ({ navigation }) => {
             gap: 4,
           }}
         >
-          <SaveIcon onPress={handleSave} height={32} width={32} color="black" />
-          <CancelIcon
-            onPress={() => navigation.navigate("MainActivity")}
-            height={32}
-            width={32}
-            color="black"
-          />
+          {fromOnLongClick ? (
+            <>
+              <SaveIcon
+                onPress={handleUpdate}
+                height={32}
+                width={32}
+                color="black"
+              />
+              <DeleteIcon
+                onPress={handleDelete}
+                height={32}
+                width={32}
+                color="black"
+              />
+            </>
+          ) : (
+            <>
+              <SaveIcon
+                onPress={handleSave}
+                height={32}
+                width={32}
+                color="black"
+              />
+              <CancelIcon
+                onPress={() => navigation.navigate("MainActivity")}
+                height={32}
+                width={32}
+                color="black"
+              />
+            </>
+          )}
         </View>
       ),
     });

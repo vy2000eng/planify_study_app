@@ -10,7 +10,9 @@ export default function AuthContextProvider({ children }) {
     count: 0,
     set_is_true: true,
     set_is_false: false,
+    is_updated: false,
   };
+  ///this is only a temporary solution, later i should make the initial state initState:{tasks:[]} and do updates on that, i think that way i wouldnt have to make so many apoi calls
   const tasksReducer = (state, action) => {
     switch (action.type) {
       case "ADD_TASK":
@@ -18,7 +20,11 @@ export default function AuthContextProvider({ children }) {
       case "SET_TRUE_TO_FALSE":
         return { ...state, set_is_true: action.payload };
       case "SET_FALSE_TO_TRUE":
-        return { ...state, set_is_true: action.payload };
+        return { ...state, set_is_false: action.payload };
+      case "DELETE_TASK":
+        return { ...state, count: action.payload };
+      case "UPDATE_TASK":
+        return { ...state, is_updated: action.payload };
 
       default:
         return state;

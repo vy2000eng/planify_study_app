@@ -1,11 +1,12 @@
 import React, { useContext, useState } from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { Card } from "react-native-elements";
 import COLORS from "../constants/theme";
 import { AssignmentIcon, AssignmentCompleted } from "../../assets/svgs";
 import axios from "axios";
 import { AuthContext } from "../context/AuthContext";
 import { REACT_APP_UPDATE_IS_TRUE } from "@env";
+import { AddActivity } from "../pages/AddActivity";
 export default function Task(props) {
   const { valuesForChildren } = useContext(AuthContext);
   const { retrieveToken, stateTask, dispatchTask } = valuesForChildren;
@@ -78,22 +79,45 @@ export default function Task(props) {
       console.log(e);
     }
   };
+  const onLongPress = () => {
+    props.navigation.navigate("AddActivity", {
+      fromOnLongClick: true,
+      mTitle: props.taskName,
+      mDescription: props.taskDescription,
+      mDate: props.due_date,
+      mPriority: props.priority,
+      mId: props.id,
+    });
+  };
+
+  const formatDate = (dateStr) => {
+    const date = new Date(dateStr);
+
+    // Since getMonth() returns a value between 0-11 we need to add 1 to get the correct month number
+    const year = date.getFullYear();
+    const month = ("0" + (date.getMonth() + 1)).slice(-2); // add leading zero
+    const day = ("0" + date.getDate()).slice(-2); // add leading zero
+
+    return `${year}-${month}-${day}`;
+  };
 
   return (
-    <Card containerStyle={styles.container}>
-      <View style={styles.contentContainer}>
-        <View style={styles.text}>
-          <Text>Title: {props.taskName}</Text>
-          <Text>Description: {props.taskDescription}</Text>
-          <Text>Created At: {props.createdAt}</Text>
-          <Text>Due Date: {props.due_date} </Text>
+    <TouchableOpacity onLongPress={onLongPress}>
+      <Card containerStyle={styles.container}>
+        <View style={styles.contentContainer}>
+          <View style={styles.text}>
+            <Text>Title: {props.taskName}</Text>
+            <Text>Description: {props.taskDescription}</Text>
+            <Text>Created At: {formatDate(props.createdAt)}</Text>
+            <Text>Due Date: {formatDate(props.due_date)} </Text>
+          </View>
+          {props.isCompleted ? (
+            <AssignmentCompleted {...params} onPress={toggle_true_false} />
+          ) : (
+            <AssignmentIcon {...params} onPress={toggle_true_false} />
+          )}
         </View>
-        {props.isCompleted ? (
-          <AssignmentCompleted {...params} onPress={toggle_true_false} />
-        ) : (
-          <AssignmentIcon {...params} onPress={toggle_true_false} />
-        )}
-      </View>
-    </Card>
+      </Card>
+    </TouchableOpacity>
   );
 }
