@@ -23,6 +23,7 @@ const LoginPage = () => {
 
   //const
 
+  console.log(REACT_APP_LOGIN_URL);
   const handle_l_r_option = () => {
     titleOfPage.startsWith("L")
       ? setTitleOfPage("Register")
