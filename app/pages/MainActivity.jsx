@@ -33,15 +33,49 @@ const MainActivtiy = ({ navigation }) => {
   // const [state, dispatch] = useReducer(reducer, initialState);
   const { valuesForChildren } = useContext(AuthContext);
   const { retrieveToken, state, dispatch } = valuesForChildren;
-  const { isFiltered, tasks } = state;
+  const { isFiltered, tasks, isTrueTasks } = state;
+  let filtered_tasks = [];
   const toggle_filter = () => {
+    const newIsFiltered = !isFiltered; // Compute new value of isFiltered
+
     dispatch({
       type: "SET_FILTERED",
-      payload: !isFiltered,
+      payload: newIsFiltered,
     });
+
+    let filtered_tasks;
+    if (newIsFiltered) {
+      filtered_tasks = tasks.filter((task) => task.completed === true);
+    } else {
+      filtered_tasks = tasks.filter((task) => task.completed === false);
+    }
+
+    dispatch({
+      type: "SET_TRUE_TASKS",
+      payload: filtered_tasks,
+    });
+
+    console.log(filtered_tasks);
   };
+  // useEffect(() => {
+  //   dispatch({
+  //     type: "SET_FILTERED",
+  //     payload: !isFiltered,
+  //   });
+  //   if (isFiltered === true) {
+  //     filtered_tasks = tasks.filter((task) => {
+  //       return task.completed === true;
+  //     });
+  //   }
+  //   dispatch({
+  //     type: "SET_TASKS",
+  //     payload: filtered_tasks,
+  //   });
+  //   console.log(filtered_tasks);
+  // }, []);
+
   useEffect(() => {
-    const fetchTokenAndData = async () => {
+    const fetch_data = async () => {
       try {
         const token = await retrieveToken();
         const config = {
@@ -49,29 +83,57 @@ const MainActivtiy = ({ navigation }) => {
             Authorization: `Bearer ${token}`,
           },
         };
+        const response = await axios.get(REACT_APP_GET_TASKS, config);
+        dispatch({ type: "SET_TASKS", payload: response.data });
 
-        const fetchData = async () => {
-          try {
-            const url = isFiltered
-              ? REACT_APP_GET_COMPLETED_TASKS
-              : REACT_APP_GET_TASKS;
-            console.log(url);
-            const response = await axios.get(url, config);
-            dispatch({ type: "SET_TASKS", payload: response.data });
-          } catch (error) {
-            if (error.response.status === 401) {
-              //token_setter(false);
-            }
-          }
-        };
-        await fetchData();
-      } catch (e) {
-        console.log(e);
+        filtered_tasks = response.data.filter((task) => {
+          return task.completed === false;
+        });
+
+        dispatch({
+          type: "SET_TRUE_TASKS",
+          payload: filtered_tasks,
+        });
+        console.log(filtered_tasks);
+      } catch (err) {
+        console.log(err);
       }
     };
 
-    fetchTokenAndData();
-  }, [isFiltered]);
+    fetch_data();
+  }, []);
+  // useEffect(() => {
+  //   const fetchTokenAndData = async () => {
+  //     try {
+  //       const token = await retrieveToken();
+  //       const config = {
+  //         headers: {
+  //           Authorization: `Bearer ${token}`,
+  //         },
+  //       };
+
+  //       const fetchData = async () => {
+  //         try {
+  //           const url = isFiltered
+  //             ? REACT_APP_GET_COMPLETED_TASKS
+  //             : REACT_APP_GET_TASKS;
+  //           console.log(url);
+  //           const response = await axios.get(url, config);
+  //           dispatch({ type: "SET_TASKS", payload: response.data });
+  //         } catch (error) {
+  //           if (error.response.status === 401) {
+  //             //token_setter(false);
+  //           }
+  //         }
+  //       };
+  //       await fetchData();
+  //     } catch (e) {
+  //       console.log(e);
+  //     }
+  //   };
+
+  //   fetchTokenAndData();
+  // }, [isFiltered]);
 
   useEffect(() => {
     console.log("The State Is " + isFiltered);
@@ -109,12 +171,12 @@ const MainActivtiy = ({ navigation }) => {
         </View>
       ),
     });
-  }, [navigation, isFiltered]);
+  }, [navigation, isFiltered, filtered_tasks]);
 
   return (
     <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.sv}>
-        {tasks.map((task) => (
+        {isTrueTasks.map((task) => (
           <Task
             key={task.id} // Make sure to provide a unique key
             id={task.id}

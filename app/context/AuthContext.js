@@ -11,6 +11,7 @@ export const AuthContext = createContext();
 const initialState = {
   isFiltered: false,
   tasks: [],
+  isTrueTasks: [],
 };
 
 const reducer = (state, action) => {
@@ -21,6 +22,8 @@ const reducer = (state, action) => {
       return { ...state, tasks: action.payload };
     case "DELETE_TASK":
       return { ...state, tasks: action.payload };
+    case "SET_TRUE_TASKS":
+      return { ...state, isTrueTasks: action.payload };
 
     default:
       return state;
