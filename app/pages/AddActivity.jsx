@@ -28,8 +28,9 @@ export const AddActivity = ({ navigation, route }) => {
   const [description, setDescription] = useState("");
   const [dropdownValue, setDropdownValue] = useState(null);
   const { valuesForChildren } = useContext(AuthContext);
-  const { retrieveToken, stateTask, dispatchTask } = valuesForChildren;
-  const { count, is_updated } = stateTask;
+  const { retrieveToken, state, dispatch } = valuesForChildren;
+  const { tasks } = state;
+  ///const { count, is_updated } = stateTask;
 
   useEffect(() => {
     const setExistingValues = () => {
@@ -66,10 +67,10 @@ export const AddActivity = ({ navigation, route }) => {
       };
       const url = REACT_APP_CREATE_TASK;
       const response = await axios.post(url, data, config);
-      dispatchTask({
-        type: "ADD_TASK",
-        payload: count + 1,
-      });
+      // dispatchTask({
+      //   type: "ADD_TASK",
+      //   payload: count + 1,
+      // });
       navigation.navigate("MainActivity");
     } catch (e) {
       console.log(e);
@@ -93,10 +94,10 @@ export const AddActivity = ({ navigation, route }) => {
       };
       const url = REACT_APP_UPDATE + `${mId}`;
       const response = await axios.put(url, data, config);
-      dispatchTask({
-        type: "UPDATE_TASK",
-        payload: !is_updated,
-      });
+      // dispatchTask({
+      //   type: "UPDATE_TASK",
+      //   payload: !is_updated,
+      // });
 
       navigation.navigate("MainActivity");
     } catch (e) {
@@ -116,10 +117,17 @@ export const AddActivity = ({ navigation, route }) => {
       };
       const url = REACT_APP_DELETE + `${mId}`;
       await axios.delete(url, config);
-      dispatchTask({
+      //console.log(tasks);
+      tasks = tasks.filter((task) => task.id !== mId);
+      dispatch({
         type: "DELETE_TASK",
-        payload: count - 1,
+        payload: tasks,
       });
+
+      // dispatchTask({
+      //   type: "DELETE_TASK",
+      //   payload: count - 1,
+      // });
       navigation.navigate("MainActivity");
     } catch (e) {
       console.log(e.response);

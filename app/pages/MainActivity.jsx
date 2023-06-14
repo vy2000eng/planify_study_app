@@ -13,26 +13,26 @@ import {
 } from "react-native";
 import axios from "axios";
 import COLORS from "../constants/theme";
-const initialState = {
-  isFiltered: false,
-  tasks: [],
-};
+// const initialState = {
+//   isFiltered: false,
+//   tasks: [],
+// };
 
-const reducer = (state, action) => {
-  switch (action.type) {
-    case "SET_FILTERED":
-      return { ...state, isFiltered: action.payload };
-    case "SET_TASKS":
-      return { ...state, tasks: action.payload };
-    default:
-      return state;
-  }
-};
+// const reducer = (state, action) => {
+//   switch (action.type) {
+//     case "SET_FILTERED":
+//       return { ...state, isFiltered: action.payload };
+//     case "SET_TASKS":
+//       return { ...state, tasks: action.payload };
+//     default:
+//       return state;
+//   }
+// };
 
 const MainActivtiy = ({ navigation }) => {
-  const [state, dispatch] = useReducer(reducer, initialState);
+  // const [state, dispatch] = useReducer(reducer, initialState);
   const { valuesForChildren } = useContext(AuthContext);
-  const { retrieveToken, stateTask } = valuesForChildren;
+  const { retrieveToken, state, dispatch } = valuesForChildren;
   const { isFiltered, tasks } = state;
   const toggle_filter = () => {
     dispatch({
@@ -71,7 +71,7 @@ const MainActivtiy = ({ navigation }) => {
     };
 
     fetchTokenAndData();
-  }, [isFiltered, stateTask]);
+  }, [isFiltered]);
 
   useEffect(() => {
     console.log("The State Is " + isFiltered);

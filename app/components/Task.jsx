@@ -9,8 +9,8 @@ import { REACT_APP_UPDATE_IS_TRUE } from "@env";
 import { AddActivity } from "../pages/AddActivity";
 export default function Task(props) {
   const { valuesForChildren } = useContext(AuthContext);
-  const { retrieveToken, stateTask, dispatchTask } = valuesForChildren;
-  const { set_is_true, set_is_false } = stateTask;
+  const { retrieveToken, state, dispatch } = valuesForChildren;
+  //const { set_is_true, set_is_false } = stateTask;
   const priority_color = [
     COLORS.lowPriority,
     COLORS.mediumPriority,
@@ -66,15 +66,15 @@ export default function Task(props) {
       };
       const url = REACT_APP_UPDATE_IS_TRUE + `${props.id}`;
       await axios.put(url, data, config);
-      props.isCompleted
-        ? dispatchTask({
-            type: "SET_TRUE_TO_FALSE",
-            payload: !set_is_true,
-          })
-        : dispatchTask({
-            type: "SET_FALSE_TO_TRUE",
-            payload: !set_is_false,
-          });
+      // props.isCompleted
+      //   ? dispatchTask({
+      //       type: "SET_TRUE_TO_FALSE",
+      //       payload: !set_is_true,
+      //     })
+      //   : dispatchTask({
+      //       type: "SET_FALSE_TO_TRUE",
+      //       payload: !set_is_false,
+      //     });
     } catch (e) {
       console.log(e);
     }
