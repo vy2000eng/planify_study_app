@@ -55,7 +55,7 @@ const MainActivtiy = ({ navigation }) => {
       payload: filtered_tasks,
     });
 
-    console.log(filtered_tasks);
+    //console.log(filtered_tasks);
   };
   // useEffect(() => {
   //   dispatch({

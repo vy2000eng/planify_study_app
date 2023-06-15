@@ -10,7 +10,7 @@ import { AddActivity } from "../pages/AddActivity";
 export default function Task(props) {
   const { valuesForChildren } = useContext(AuthContext);
   const { retrieveToken, state, dispatch } = valuesForChildren;
-  //const { set_is_true, set_is_false } = stateTask;
+  const { isTrueTasks, tasks } = state;
   const priority_color = [
     COLORS.lowPriority,
     COLORS.mediumPriority,
@@ -66,15 +66,27 @@ export default function Task(props) {
       };
       const url = REACT_APP_UPDATE_IS_TRUE + `${props.id}`;
       await axios.put(url, data, config);
-      // props.isCompleted
-      //   ? dispatchTask({
-      //       type: "SET_TRUE_TO_FALSE",
-      //       payload: !set_is_true,
-      //     })
-      //   : dispatchTask({
-      //       type: "SET_FALSE_TO_TRUE",
-      //       payload: !set_is_false,
-      //     });
+
+      const editted_task_list = tasks.map((task) => {
+        if (task.id === props.id) {
+          return { ...task, completed: !task.completed };
+        }
+        return task;
+      });
+      // console.log(editted_task_list);
+
+      dispatch({
+        type: "SET_TASKS",
+        payload: editted_task_list,
+      });
+      const filtered_tasks = editted_task_list.filter((task) => {
+        return task.completed === false;
+      });
+
+      dispatch({
+        type: "SET_TRUE_TASKS",
+        payload: filtered_tasks,
+      });
     } catch (e) {
       console.log(e);
     }
