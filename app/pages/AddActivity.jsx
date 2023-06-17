@@ -16,6 +16,7 @@ import {
   REACT_APP_CREATE_TASK,
   REACT_APP_DELETE,
   REACT_APP_UPDATE,
+  REACT_APP_GET_TASKS,
 } from "@env";
 import { AuthContext } from "../context/AuthContext";
 
@@ -28,8 +29,11 @@ export const AddActivity = ({ navigation, route }) => {
   const [description, setDescription] = useState("");
   const [dropdownValue, setDropdownValue] = useState(null);
   const { valuesForChildren } = useContext(AuthContext);
-  const { retrieveToken, state, dispatch } = valuesForChildren;
+  const { retrieveToken, state, dispatch, setReloadTasks, reloadTasks } =
+    valuesForChildren;
   const { tasks } = state;
+
+  console.log(valuesForChildren);
   ///const { count, is_updated } = stateTask;
 
   useEffect(() => {
@@ -66,16 +70,31 @@ export const AddActivity = ({ navigation, route }) => {
         priority: dropdownValue,
       };
       const url = REACT_APP_CREATE_TASK;
-      const response = await axios.post(url, data, config);
-      // dispatchTask({
-      //   type: "ADD_TASK",
-      //   payload: count + 1,
-      // });
-      navigation.navigate("MainActivity");
+      await axios
+        .post(url, data, config)
+        .then(setReloadTasks(!reloadTasks))
+        .then(navigation.navigate("MainActivity"));
+
+      dispatch({
+        type: "SET_FILTERED",
+        action: false,
+      });
+      const filtered_tasks = editted_task_list.filter((task) => {
+        return task.completed === false;
+      });
+      dispatch({
+        type: "SET_TRUE_TASKS",
+        payload: filtered_tasks,
+      });
+
+      //const tasks_response = await axios.get(REACT_APP_GET_TASKS, config);
+      //dispatch({ type: "SET_TASKS", payload: tasks_response.data });
+      // setReloadTasks(!reloadTasks);
+      // navigation.navigate("MainActivity");
     } catch (e) {
       console.log(e);
     }
-  }, [title, description, date, dropdownValue]);
+  }, [title, description, date, dropdownValue, reloadTasks, setReloadTasks]);
 
   const handleUpdate = async () => {
     console.log("its the update button thats being called");
@@ -93,7 +112,26 @@ export const AddActivity = ({ navigation, route }) => {
         priority: dropdownValue,
       };
       const url = REACT_APP_UPDATE + `${mId}`;
-      const response = await axios.put(url, data, config);
+      await axios.put(url, data, config);
+      const editted_tasks = tasks.map((task) => {
+        if (task.id === mId) {
+          return {
+            ...task,
+            title: title,
+            description: description,
+            due_date: date,
+            priority: dropdownValue,
+          };
+        }
+        return task;
+      });
+
+      dispatch({
+        type: "SET_TASKS",
+        payload: editted_tasks,
+      });
+      setReloadTasks(!reloadTasks);
+
       // dispatchTask({
       //   type: "UPDATE_TASK",
       //   payload: !is_updated,

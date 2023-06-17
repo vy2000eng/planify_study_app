@@ -9,8 +9,9 @@ import { REACT_APP_UPDATE_IS_TRUE } from "@env";
 import { AddActivity } from "../pages/AddActivity";
 export default function Task(props) {
   const { valuesForChildren } = useContext(AuthContext);
-  const { retrieveToken, state, dispatch } = valuesForChildren;
-  const { isTrueTasks, tasks } = state;
+  const { retrieveToken, state, dispatch, setReloadTasks, reloadTasks } =
+    valuesForChildren;
+  const { isTrueTasks, tasks, isFiltered } = state;
   const priority_color = [
     COLORS.lowPriority,
     COLORS.mediumPriority,
@@ -79,14 +80,16 @@ export default function Task(props) {
         type: "SET_TASKS",
         payload: editted_task_list,
       });
+      //setReloadTasks(!reloadTasks);
       const filtered_tasks = editted_task_list.filter((task) => {
-        return task.completed === false;
+        return isFiltered ? task.completed === true : task.completed === false;
       });
-
       dispatch({
         type: "SET_TRUE_TASKS",
         payload: filtered_tasks,
       });
+
+      //setReloadTasks(!reloadTasks);
     } catch (e) {
       console.log(e);
     }

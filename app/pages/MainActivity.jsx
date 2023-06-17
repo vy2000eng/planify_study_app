@@ -13,26 +13,11 @@ import {
 } from "react-native";
 import axios from "axios";
 import COLORS from "../constants/theme";
-// const initialState = {
-//   isFiltered: false,
-//   tasks: [],
-// };
-
-// const reducer = (state, action) => {
-//   switch (action.type) {
-//     case "SET_FILTERED":
-//       return { ...state, isFiltered: action.payload };
-//     case "SET_TASKS":
-//       return { ...state, tasks: action.payload };
-//     default:
-//       return state;
-//   }
-// };
 
 const MainActivtiy = ({ navigation }) => {
   // const [state, dispatch] = useReducer(reducer, initialState);
   const { valuesForChildren } = useContext(AuthContext);
-  const { retrieveToken, state, dispatch } = valuesForChildren;
+  const { retrieveToken, state, dispatch, reloadTasks } = valuesForChildren;
   const { isFiltered, tasks, isTrueTasks } = state;
   let filtered_tasks = [];
   const toggle_filter = () => {
@@ -54,25 +39,7 @@ const MainActivtiy = ({ navigation }) => {
       type: "SET_TRUE_TASKS",
       payload: filtered_tasks,
     });
-
-    //console.log(filtered_tasks);
   };
-  // useEffect(() => {
-  //   dispatch({
-  //     type: "SET_FILTERED",
-  //     payload: !isFiltered,
-  //   });
-  //   if (isFiltered === true) {
-  //     filtered_tasks = tasks.filter((task) => {
-  //       return task.completed === true;
-  //     });
-  //   }
-  //   dispatch({
-  //     type: "SET_TASKS",
-  //     payload: filtered_tasks,
-  //   });
-  //   console.log(filtered_tasks);
-  // }, []);
 
   useEffect(() => {
     const fetch_data = async () => {
@@ -85,10 +52,18 @@ const MainActivtiy = ({ navigation }) => {
         };
         const response = await axios.get(REACT_APP_GET_TASKS, config);
         dispatch({ type: "SET_TASKS", payload: response.data });
+        // toggle_filter();
 
         filtered_tasks = response.data.filter((task) => {
-          return task.completed === false;
+          return isFiltered
+            ? task.completed === true
+            : task.completed === false;
         });
+        // const filtered_tasks = editted_task_list.filter((task) => {
+        //   return isFiltered
+        //     ? task.completed === true
+        //     : task.completed === false;
+        // });
 
         dispatch({
           type: "SET_TRUE_TASKS",
@@ -101,39 +76,7 @@ const MainActivtiy = ({ navigation }) => {
     };
 
     fetch_data();
-  }, []);
-  // useEffect(() => {
-  //   const fetchTokenAndData = async () => {
-  //     try {
-  //       const token = await retrieveToken();
-  //       const config = {
-  //         headers: {
-  //           Authorization: `Bearer ${token}`,
-  //         },
-  //       };
-
-  //       const fetchData = async () => {
-  //         try {
-  //           const url = isFiltered
-  //             ? REACT_APP_GET_COMPLETED_TASKS
-  //             : REACT_APP_GET_TASKS;
-  //           console.log(url);
-  //           const response = await axios.get(url, config);
-  //           dispatch({ type: "SET_TASKS", payload: response.data });
-  //         } catch (error) {
-  //           if (error.response.status === 401) {
-  //             //token_setter(false);
-  //           }
-  //         }
-  //       };
-  //       await fetchData();
-  //     } catch (e) {
-  //       console.log(e);
-  //     }
-  //   };
-
-  //   fetchTokenAndData();
-  // }, [isFiltered]);
+  }, [reloadTasks]);
 
   useEffect(() => {
     console.log("The State Is " + isFiltered);

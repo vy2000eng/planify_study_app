@@ -34,6 +34,7 @@ export default function AuthContextProvider({ children }) {
   const [authTokenBoolean, setAuthTokenBoolean] = useState(false);
   const [state, dispatch] = useReducer(reducer, initialState);
   const { isFiltered } = initialState;
+  const [reloadTasks, setReloadTasks] = useState(false);
 
   // const initial_state = {
   //   count: 0,
@@ -109,6 +110,8 @@ export default function AuthContextProvider({ children }) {
     removeToken,
     state,
     dispatch,
+    reloadTasks,
+    setReloadTasks,
   };
   return (
     <AuthContext.Provider value={{ valuesForChildren }}>
