@@ -6,11 +6,8 @@ import LoggedInStack from "./LoggedInStack";
 import LoggedOutStack from "./LoggedOutStack";
 import AuthContextProvider, { AuthContext } from "../context/AuthContext";
 const Navigation = () => {
-  //const { authTokenBoolean } = useContext(AuthContext);
   const { valuesForChildren } = useContext(AuthContext);
   const { authTokenBoolean } = valuesForChildren;
-  //onsole.log(authTokenBoolean);
-  // const b_val = true;
 
   return <>{authTokenBoolean ? <LoggedInStack /> : <LoggedOutStack />}</>;
 };

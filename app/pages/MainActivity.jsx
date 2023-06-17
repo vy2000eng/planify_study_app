@@ -15,7 +15,6 @@ import axios from "axios";
 import COLORS from "../constants/theme";
 
 const MainActivtiy = ({ navigation }) => {
-  // const [state, dispatch] = useReducer(reducer, initialState);
   const { valuesForChildren } = useContext(AuthContext);
   const { retrieveToken, state, dispatch, reloadTasks } = valuesForChildren;
   const { isFiltered, tasks, isTrueTasks } = state;
@@ -52,18 +51,12 @@ const MainActivtiy = ({ navigation }) => {
         };
         const response = await axios.get(REACT_APP_GET_TASKS, config);
         dispatch({ type: "SET_TASKS", payload: response.data });
-        // toggle_filter();
 
         filtered_tasks = response.data.filter((task) => {
           return isFiltered
             ? task.completed === true
             : task.completed === false;
         });
-        // const filtered_tasks = editted_task_list.filter((task) => {
-        //   return isFiltered
-        //     ? task.completed === true
-        //     : task.completed === false;
-        // });
 
         dispatch({
           type: "SET_TRUE_TASKS",

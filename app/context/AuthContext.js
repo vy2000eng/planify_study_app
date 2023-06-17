@@ -36,44 +36,6 @@ export default function AuthContextProvider({ children }) {
   const { isFiltered } = initialState;
   const [reloadTasks, setReloadTasks] = useState(false);
 
-  // const initial_state = {
-  //   count: 0,
-  //   set_is_true: true,
-  //   set_is_false: false,
-  //   is_updated: false,
-  // };
-  ///this is only a temporary solution, later i should make the initial state initState:{tasks:[]} and do updates on that, i think that way i wouldnt have to make so many apoi calls
-  // const tasksReducer = (state, action) => {
-  //   switch (action.type) {
-  //     case "ADD_TASK":
-  //       return { ...state, count: action.payload };
-  //     case "SET_TRUE_TO_FALSE":
-  //       return { ...state, set_is_true: action.payload };
-  //     case "SET_FALSE_TO_TRUE":
-  //       return { ...state, set_is_false: action.payload };
-  //     case "DELETE_TASK":
-  //       return { ...state, count: action.payload };
-  //     case "UPDATE_TASK":
-  //       return { ...state, is_updated: action.payload };
-
-  //     default:
-  //       return state;
-  //   }
-  // };
-  // const reducer = (state, action) => {
-  //   switch (action.type) {
-  //     case "SET_FILTERED":
-  //       return { ...state, isFiltered: action.payload };
-  //     case "SET_TASKS":
-  //       return { ...state, tasks: action.payload };
-  //     default:
-  //       return state;
-  //   }
-  // };
-
-  //const [stateTask, dispatchTask] = useReducer(tasksReducer, initial_state);
-
-  //secure store functions
   const storeToken = async (token) => {
     try {
       await SecureStore.setItemAsync("token", token);
@@ -87,7 +49,6 @@ export default function AuthContextProvider({ children }) {
   const retrieveToken = async () => {
     try {
       return await SecureStore.getItemAsync("token");
-      //console.log("Retrieved token:", token);
     } catch (error) {
       console.log("Error retrieving token:", error);
     }

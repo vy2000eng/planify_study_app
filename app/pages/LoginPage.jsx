@@ -18,10 +18,6 @@ const LoginPage = () => {
   const [password, setPassword] = useState("");
   const { valuesForChildren } = useContext(AuthContext);
   const { storeToken } = valuesForChildren;
-  // console.log(valuesForChildren);
-  //console.log(storeToken);
-
-  //const
 
   console.log(REACT_APP_LOGIN_URL);
   const handle_l_r_option = () => {
@@ -31,8 +27,6 @@ const LoginPage = () => {
   };
 
   const handleCreateUser = () => {
-    //currently this code is for registration not logging on
-
     axios
 
       .post(REACT_APP_CREATE_USER_URL, {
@@ -45,13 +39,9 @@ const LoginPage = () => {
       .catch((error) => {
         console.log(error);
       });
-
-    // Handle login logic here
   };
 
   const handleLogin = () => {
-    //console.log(process.env.NODE_ENV);
-
     axios
 
       .post(REACT_APP_LOGIN_URL, {
@@ -59,8 +49,6 @@ const LoginPage = () => {
         password: password,
       })
       .then((response) => {
-        //setAuthToken(response.data.acess_token);
-        // authContextValue.storeToken(response.data.access_token);
         console.log(response.data.acess_token);
         storeToken(response.data.acess_token);
       })

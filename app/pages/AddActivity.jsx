@@ -86,11 +86,6 @@ export const AddActivity = ({ navigation, route }) => {
         type: "SET_TRUE_TASKS",
         payload: filtered_tasks,
       });
-
-      //const tasks_response = await axios.get(REACT_APP_GET_TASKS, config);
-      //dispatch({ type: "SET_TASKS", payload: tasks_response.data });
-      // setReloadTasks(!reloadTasks);
-      // navigation.navigate("MainActivity");
     } catch (e) {
       console.log(e);
     }
@@ -132,11 +127,6 @@ export const AddActivity = ({ navigation, route }) => {
       });
       setReloadTasks(!reloadTasks);
 
-      // dispatchTask({
-      //   type: "UPDATE_TASK",
-      //   payload: !is_updated,
-      // });
-
       navigation.navigate("MainActivity");
     } catch (e) {
       console.log(e);
@@ -155,17 +145,12 @@ export const AddActivity = ({ navigation, route }) => {
       };
       const url = REACT_APP_DELETE + `${mId}`;
       await axios.delete(url, config);
-      //console.log(tasks);
       tasks = tasks.filter((task) => task.id !== mId);
       dispatch({
         type: "DELETE_TASK",
         payload: tasks,
       });
 
-      // dispatchTask({
-      //   type: "DELETE_TASK",
-      //   payload: count - 1,
-      // });
       navigation.navigate("MainActivity");
     } catch (e) {
       console.log(e.response);
